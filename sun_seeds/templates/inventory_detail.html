@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Item Detail
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Item Detail</h1>
+    
+    <dl class="row">
+        <dt class="col-sm-3">Name:</dt>
+        <dd class="col-sm-9">{{ item.name }}</dd>
+        
+        <dt class="col-sm-3">Description:</dt>
+        <dd class="col-sm-9">{{ item.description }}</dd>
+        
+        <dt class="col-sm-3">Quantity:</dt>
+        <dd class="col-sm-9">{{ item.quantity }}</dd>
+        
+        <dt class="col-sm-3">Price:</dt>
+        <dd class="col-sm-9">{{ item.price }}</dd>
+    </dl>
+    
+    <a href="{% url 'sunflower_inventory' %}" class="btn btn-secondary">Back to Inventory List</a>
+</div>
+{% endblock %}

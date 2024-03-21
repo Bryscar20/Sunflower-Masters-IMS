@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Sunflower Masters{% endblock %}</title>
+    {% load static %}
+    <!-- Bootstrap CSS via CDN -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Font Awesome CSS via CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Add your custom CSS file here if needed -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+
+<body>
+    <header>
+        {% include 'partials/nav.html' %}
+    </header>
+
+    <main>
+        <div class="container mt-4">
+            
+            {% if user.is_authenticated %}
+            {% include 'partials/topside.html' %}
+                {% block content %}
+                {% endblock %}        
+            {% else %}
+            {% include 'partials/topside.html' %}
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h1>Inventory Management System</h1>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="navbar-nav ml-auto">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/user-login/">Login</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/user-register/">Register</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </main>
+
+    <footer class="footer mt-auto py-3 bg-dark text-white">
+        <div class="container text-center">
+            &copy; 2023 Inventory Management System
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS and Popper.js via CDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

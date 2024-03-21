@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Create Inventory Item
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Create Inventory Item</h1>
+
+    <div class="card">
+        <div class="card-header">
+            <h2>Enter Item Details</h2>
+        </div>
+        <div class="card-body">
+            <form method="post" action="{% url 'sunflower_inventory' %}">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Create</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

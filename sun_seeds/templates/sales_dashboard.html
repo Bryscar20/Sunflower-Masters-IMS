@@ -1,0 +1,40 @@
+<!-- sales_dashboard.html -->
+{% extends 'base.html' %}
+
+{% block title %}
+    Sales Dashboard
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Sales Dashboard</h1>
+
+    <!-- Display recent sales transactions -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h2>Recent Sales Transactions</h2>
+        </div>
+        <div class="card-body">
+            <ul class="list-group">
+                {% for sale in recent_sales %}
+                <li class="list-group-item">
+                    {{ sale.product_name }} - Quantity: {{ sale.quantity_sold }}, Total Price: ${{ sale.total_price }}
+                </li>
+                {% empty %}
+                <li class="list-group-item">No recent sales transactions</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <!-- Display sales chart -->
+    <div class="card">
+        <div class="card-header">
+            <h2>Sales Chart</h2>
+        </div>
+        <div class="card-body">
+            <canvas id="salesChart" width="400" height="200"></canvas>
+        </div>
+    </div>
+</div>
+{% endblock %}

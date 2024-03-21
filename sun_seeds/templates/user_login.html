@@ -1,0 +1,69 @@
+{% extends 'partials/base.html' %}
+
+{% block title %}
+    Log in to your account
+{% endblock %}
+{% load static %}
+
+
+
+{% block content %}
+
+    <main>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card bg-primary text-white">
+                        <div class="card-header">
+                            <h2 class="text-center">User Login</h2>
+                        </div>
+                        <div class="card-body">
+                            <form method="post">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="username" class="sr-only">Username:</label>
+                                    <input type="text" name="username" id="username" class="form-control" placeholder="Enter your username" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password" class="sr-only">Password:</label>
+                                    <input type="password" name="password" id="password" class="form-control" placeholder="Enter your password" required>
+                                </div>
+                                <button type="submit" class="btn btn-light btn-block">Login</button>
+                            </form>
+                            {% if error_message %}
+                            <p class="text-danger mt-3">{{ error_message }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>                
+                <div class="col-md-6">
+                    <div class="card bg-success text-white">
+                        <div class="card-header">
+                            <h2 class="text-center">Profile Indicators</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="info-item">
+                                <label>Number of Clients:</label>
+                                <span>{{ num_clients }}</span>
+                            </div>
+                            <div class="info-item">
+                                <label>Total Revenue:</label>
+                                <span>{{ total_revenue }}</span>
+                            </div>
+                            <div class="info-item">
+                                <label>Current Customer Pipeline:</label>
+                                <ul class="list-unstyled">
+                                    {% for stage in pipeline_stages %}
+                                        <li>{{ stage.name }}: {{ stage.count }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+{% endblock %}
+

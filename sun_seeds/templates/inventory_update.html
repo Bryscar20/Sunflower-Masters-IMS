@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Update Inventory Item{% endblock %}
+{% include 'partials/nav.html' %}
+{% include 'partials/topside.html' %}
+{% block content %}
+  <h1>Edit Inventory Item</h1>
+  <form method="post" action="{% url 'inventory_update' item.pk %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Update Item</button>
+  </form>
+{% endblock %}

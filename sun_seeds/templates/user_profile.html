@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    User Profile
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="profile-container">
+                <div class="profile-header">
+                    <h1>User Profile</h1>
+                </div>
+                <div class="profile-info">
+                    <div class="info-item">
+                        <label>Name:</label>
+                        <span>{{ user.username }}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Email:</label>
+                        <span>{{ user.email }}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Phone Number:</label>
+                        <span>{{ user_profile.phone_number }}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Address:</label>
+                        <span>{{ user_profile.address }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="profile-container">
+                <div class="profile-header">
+                    <h1>Profile Indicators</h1>
+                </div>
+                <div class="profile-info">
+                    <div class="info-item">
+                        <label>Number of Clients:</label>
+                        <span>{{ num_clients }}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Total Revenue:</label>
+                        <span>{{ total_revenue }}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Current Customer Pipeline:</label>
+                        <ul>
+                            {% for stage in pipeline_stages %}
+                                <li>{{ stage.name }}: {{ stage.count }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="info-item">
+                        <form action="{% url 'logout' %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Logout</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+</div>
+{% endblock %}

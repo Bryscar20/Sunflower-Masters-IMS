@@ -1,0 +1,227 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Section 1: Inventory Overview -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3 class="mb-0">Inventory Overview</h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card bg-light mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Items</h5>
+                            <p class="card-text">{{ total_items }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card bg-light mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Quantity</h5>
+                            <p class="card-text">{{ total_quantity }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card bg-light mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Value</h5>
+                            <p class="card-text">${{ total_value }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- Section 2: Inventory Table -->
+<div class="card mb-4">
+    <div class="card-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">Inventory Items</h3>
+            <button id="addItemBtn" class="btn btn-primary">Add Item</button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Date Added</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="inventoryTableBody">
+                    {% for item in inventory_detail %}
+                    <tr>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.description }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.price }}</td>
+                        <td>{{ item.date_added }}</td>
+                        <td>
+                            <a href="{% url 'inventory_update' item.pk %}" class="btn btn-sm btn-info">Edit</a>
+                            <form action="{% url 'inventory_delete' item.pk %}" method="post" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#inventory-form').submit(function(event) {
+                event.preventDefault(); // Prevent default form submission
+
+                // Submit the form via AJAX
+                $.ajax({
+                    type: 'POST',
+                    url: $(this).attr('action'),
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        if (response.success) {
+                            // Update inventory table with new item data
+                            let newItemHTML = `
+                                <tr>
+                                    <td>${response.new_item.name}</td>
+                                    <td>${response.new_item.description}</td>
+                                    <td>${response.new_item.quantity}</td>
+                                    <td>${response.new_item.price}</td>
+                                    <td>${response.new_item.date_added}</td>
+                                    <td>
+                                        <a href="#">Edit</a>
+                                        <a href="#">Delete</a>
+                                    </td>
+                                </tr>
+                            `;
+                            $('#inventoryTableBody').append(newItemHTML);
+
+                            // Optionally, display success message or perform other actions
+                        } else {
+                            // Handle form validation errors or other failures
+                            console.log('Error:', response.errors);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle AJAX errors
+                        console.error('AJAX Error:', error);
+                    }
+                });
+            });
+        });
+    </script>
+
+<script>
+    // Listen for form submission
+    document.getElementById("inventory-form").addEventListener("submit", function(event) {
+        event.preventDefault(); // Prevent default form submission
+        
+        // Get form data
+        let formData = new FormData(this);
+
+        // Sanitize form data (e.g., validate input)
+
+        // Create inventory item HTML
+        let inventoryItemHTML = `
+            <tr>
+                <td>${formData.get('name')}</td>
+                <td>${formData.get('description')}</td>
+                <td>${formData.get('quantity')}</td>
+                <td>${formData.get('price')}</td>
+                <td>${new Date().toISOString().slice(0, 10)}</td> <!-- Current date -->
+                <td>
+                    <a href="#">Edit</a>
+                    <a href="#">Delete</a>
+                </td>
+            </tr>
+        `;
+
+        // Append inventory item HTML to inventory table body
+        document.getElementById("inventoryTableBody").innerHTML += inventoryItemHTML;
+
+        // Optionally, send form data to the server using fetch() or XMLHttpRequest
+        
+        // Reset the form
+        this.reset();
+    });
+</script>
+
+
+    <!-- Section 3: Inventory Chart -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="mb-0">Inventory Chart</h3>
+        </div>
+        <div class="card-body">
+            <canvas id="inventoryChart" width="400" height="200"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- <script>
+    document.getElementById("addItemBtn").addEventListener("click", function() {
+        // Redirect to the inventory create page
+        window.location.href = "{% url 'inventory_create' %}";
+    });
+</script> -->
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#inventory-form').submit(function(event) {
+            event.preventDefault(); // Prevent default form submission
+            
+            // Submit the form via AJAX
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'),
+                data: $(this).serialize(),
+                success: function(response) {
+                    if (response.success) {
+                        // Update inventory table with new item data
+                        let newItemHTML = `
+                            <tr>
+                                <td>${response.new_item.name}</td>
+                                <td>${response.new_item.description}</td>
+                                <td>${response.new_item.quantity}</td>
+                                <td>${response.new_item.price}</td>
+                                <td>${response.new_item.date_added}</td>
+                                <td>
+                                    <a href="#">Edit</a>
+                                    <a href="#">Delete</a>
+                                </td>
+                            </tr>
+                        `;
+                        $('#inventoryTableBody').append(newItemHTML);
+                        
+                        // Optionally, display success message or perform other actions
+                    } else {
+                        // Handle form validation errors or other failures
+                        console.log('Error:', response.errors);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    // Handle AJAX errors
+                    console.error('AJAX Error:', error);
+                }
+            });
+        });
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Sales Transactions
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Sales Dashboard</h1>
+
+    <!-- Display recent sales transactions -->
+    <div class="card mb-4">
+        <!-- Button to toggle the add sale form visibility -->
+        <button type="button" class="btn btn-primary" id="addsaleBtn">Add New Sale</button>
+
+         <!-- Section 2: Add new Sale form (hidden by default) -->
+         <div class="card" id="addSaleForm" style="display: none;">
+            <div class="card-header">
+                <h2>Add New Sale</h2>
+            </div>
+            <div class="card-body">
+                <!-- <form method="post" action="{% url 'inventory_create' %}"> -->
+                    <form method="post" action="{% url 'sale_create' %}">
+                        {% csrf_token %}
+                        
+                        <!-- Name -->
+                        <div class="form-group row">
+                            <label for="id_name" class="col-md-2 col-form-label">Name:</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="id_name" name="name" placeholder="Enter name">
+                            </div>
+                        </div>
+       
+        <div class="card-header">
+            <h2>Recent Sales Transactions</h2>
+        </div>
+        <div class="card-body">
+            <ul class="list-group">
+                {% for sale in Sales %}
+                <li class="list-group-Sale">
+                    {{ sale.product_name }} - Quantity: {{ sale.quantity }}, Total Price: ${{ sale.total_price }}
+                </li>
+                {% empty %}
+                <li class="list-group-Sale">No recent sales transactions</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <!-- Display sales chart -->
+    <div class="card">
+        <div class="card-header">
+            <h2>Sales Chart</h2>
+        </div>
+        <div class="card-body">
+            <canvas id="salesChart" width="400" height="200"></canvas>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2>Add New sale</h2>
+    </div>
+    <div class="card-body">
+        <form method="post" action="{% url 'inventory_create' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">Create sale</button>
+        </form>
+    </div>
+</div>
+
+<!-- JavaScript code for rendering the sales chart -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var ctx = document.getElementById('salesChart').getContext('2d');
+    var salesChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [{% for sale in Sales %}"{{ sale.product_name }}", {% endfor %}],
+            datasets: [{
+                label: 'Quantity Sold',
+                data: [{% for sale in Sales %}{{ sale.quantity }}, {% endfor %}],
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
+<script>
+    // Script to toggle the visibility of the add Sale form
+    document.getElementById("addSaleBtn").addEventListener("click", function() {
+        var addSaleForm = document.getElementById("addSaleForm");
+        if (addSaleForm.style.display === "none") {
+            addSaleForm.style.display = "block";
+        } else {
+            addSaleForm.style.display = "none";
+        }
+    });
+</script>
+
+{% endblock %}

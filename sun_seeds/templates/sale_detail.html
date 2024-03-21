@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}
+    Sale Detail
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Sale Detail</h1>
+    <div class="card">
+        <div class="card-header">
+            <h2>Sale Information</h2>
+        </div>
+        <div class="card-body">
+            <p><strong>Product Name:</strong> {{ sale.product_name }}</p>
+            <p><strong>Quantity:</strong> {{ sale.quantity }}</p>
+            {% comment %} Compute total price as unit price * quantity {% endcomment %}
+            {% with total_price=sale.unit_price|floatformat:2|mul:sale.quantity %}
+            <p><strong>Total Price:</strong> ${{ total_price }}</p>
+            {% endwith %}
+        </div>
+    </div>
+</div>
+{% endblock %}

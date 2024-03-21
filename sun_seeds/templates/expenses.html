@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Expenses Dashboard
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h1>Expenses Dashboard</h1>
+        
+        <!-- Display expense data in charts or widgets -->
+        <div class="row">
+            <!-- Section 1: Recent Expenses List -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Recent Expenses</h2>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                            {% for expense in recent_expenses %}
+                                <li class="list-group-item">
+                                    <span class="font-weight-bold">{{ expense.description }}</span>
+                                    <span class="float-right">Amount: ${{ expense.amount }}, Date: {{ expense.date_incurred }}</span>
+                                </li>
+                            {% empty %}
+                                <li class="list-group-item">No recent expenses</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Section 2: Expenses Chart -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Expenses Chart</h2>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="expensesChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript code for rendering the expenses chart -->
+    <script>
+        var ctx = document.getElementById('expensesChart').getContext('2d');
+        var expensesChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [{% for expense in recent_expenses %}"{{ expense.description }}", {% endfor %}],
+                datasets: [{
+                    label: 'Amount',
+                    data: [{% for expense in recent_expenses %}{{ expense.amount }}, {% endfor %}],
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+{% endblock %}

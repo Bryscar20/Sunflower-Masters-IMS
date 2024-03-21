@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Create Sales Transaction
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Create Sales Transaction</h1>
+
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h2>Enter Sales Details</h2>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="id_sunflower">Select Item:</label>
+                    {{ form.sunflower }}
+                </div>
+                <div class="form-group">
+                    <label for="id_quantity_sold">Quantity (kg):</label>
+                    {{ form.quantity_sold }}
+                </div>
+                <div class="form-group">
+                    <label for="id_unit_price">Unit Price:</label>
+                    <input type="number" step="0.01" id="id_unit_price" name="unit_price" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="id_total_price">Total Price:</label>
+                    <input type="text" id="id_total_price" name="total_price" class="form-control" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="id_transaction_date">Transaction Date:</label>
+                    <input type="date" id="id_transaction_date" name="transaction_date" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Create</button>
+            </form>
+        </div>
+        
+<script>
+    // Function to calculate total price based on quantity and unit price
+    function calculateTotalPrice() {
+        var quantity = parseFloat(document.getElementById('id_quantity_sold').value);
+        var unitPrice = parseFloat(document.getElementById('id_unit_price').value);
+        var totalPriceField = document.getElementById('id_total_price');
+        var totalPrice = quantity * unitPrice;
+        totalPriceField.value = totalPrice.toFixed(2);
+    }
+
+    // Add event listeners to quantity and unit price fields
+    document.getElementById('id_quantity_sold').addEventListener('input', calculateTotalPrice);
+    document.getElementById('id_unit_price').addEventListener('input', calculateTotalPrice);
+
+    // Calculate initial total price when the page loads
+    calculateTotalPrice();
+</script>
+{% endblock %}

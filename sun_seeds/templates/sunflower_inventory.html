@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Sunflower Inventory
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Sunflower Inventory</h1>
+    
+    <!-- Section 1: Display list of inventory items -->
+    <div class="card mb-4">
+        <!-- Button to toggle the add item form visibility -->
+        <button type="button" class="btn btn-primary" id="addItemBtn">Add New Item</button>
+
+        <!-- Section 2: Add new item form (hidden by default) -->
+        <div class="card" id="addItemForm" style="display: none;">
+            <div class="card-header">
+                <h2>Add New Item</h2>
+            </div>
+            <div class="card-body">
+                <!-- <form method="post" action="{% url 'inventory_create' %}"> -->
+                    <form method="post" action="{% url 'inventory_create' %}">
+                        {% csrf_token %}
+                        
+                        <!-- Name -->
+                        <div class="form-group row">
+                            <label for="id_name" class="col-md-2 col-form-label">Name:</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="id_name" name="name" placeholder="Enter name">
+                            </div>
+                        </div>
+                    
+                        <!-- Description -->
+                        <div class="form-group row">
+                            <label for="id_description" class="col-md-2 col-form-label">Description:</label>
+                            <div class="col-md-10">
+                                <textarea class="form-control" id="id_description" name="description" rows="3" placeholder="Enter description"></textarea>
+                            </div>
+                        </div>
+                    
+                        <!-- Quantity -->
+                        <div class="form-group row">
+                            <label for="id_quantity" class="col-md-2 col-form-label">Quantity:</label>
+                            <div class="col-md-10">
+                                <input type="number" class="form-control" id="id_quantity" name="quantity" placeholder="Enter quantity">
+                            </div>
+                        </div>
+                    
+                        <!-- Price -->
+                        <div class="form-group row">
+                            <label for="id_price" class="col-md-2 col-form-label">Price:</label>
+                            <div class="col-md-10">
+                                <input type="number" class="form-control" id="id_price" name="price" step="0.01" placeholder="Enter price">
+                            </div>
+                        </div>
+                    
+                        <!-- Submit Button -->
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-primary">Add Item</button>
+                            </div>
+                        </div>
+                    </form>
+                    
+            </div>
+        </div>
+
+        <div class="card-header">
+            <h2>Inventory Items</h2>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.description }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.price }}</td>
+                        <td>
+                            <a href="{% url 'inventory_update' item.pk %}" class="btn btn-primary btn-sm">Edit</a>
+                            <a href="{% url 'inventory_delete' item.pk %}" class="btn btn-danger btn-sm">Delete</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5">No items found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // Script to toggle the visibility of the add item form
+    document.getElementById("addItemBtn").addEventListener("click", function() {
+        var addItemForm = document.getElementById("addItemForm");
+        if (addItemForm.style.display === "none") {
+            addItemForm.style.display = "block";
+        } else {
+            addItemForm.style.display = "none";
+        }
+    });
+</script>
+
+{% endblock %}

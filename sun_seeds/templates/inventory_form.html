@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Add/Edit Inventory Item{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h1 class="mb-4">Add/Edit Inventory Item</h1>
+  <form id="inventory-form" method="post">
+    {% csrf_token %}
+    <div class="form-group">
+      {{ form.name.label_tag }}
+      {{ form.name }}
+    </div>
+    <div class="form-group">
+      {{ form.description.label_tag }}
+      {{ form.description }}
+    </div>
+    <div class="form-group">
+      {{ form.quantity.label_tag }}
+      {{ form.quantity }}
+    </div>
+    <div class="form-group">
+      {{ form.price.label_tag }}
+      {{ form.price }}
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+  </form>
+</div>
+{% endblock %}
+<script>
+  $(document).ready(function() {
+      $('#inventory-form').submit(function(event) {
+          event.preventDefault(); // Prevent default form submission
+          
+          // Submit the form via AJAX
+          $.ajax({
+              type: 'POST',
+              url: $(this).attr('action'),
+              data: $(this).serialize(),
+              success: function(response) {
+                  if (response.success) {
+                      // Reload the page to fetch the updated inventory list
+                      location.reload();
+                  } else {
+                      // Handle form validation errors or other failures
+                      console.log('Error:', response.errors);
+                  }
+              },
+              error: function(xhr, status, error) {
+                  // Handle AJAX errors
+                  console.error('AJAX Error:', error);
+              }
+          });
+      });
+  });
+</script>
